@@ -29,6 +29,7 @@
     "enmap": "^2.0.4",
     "enmap-level": "^2.0.2",
     "moment": "^2.20.1",
-    "moment-duration-format": "^2.2.0"
+    "moment-duration-format": "^2.2.0",
+    "nodemon": "^1.18.2"
   }
 }

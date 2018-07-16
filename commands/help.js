@@ -1,4 +1,4 @@
-// Evie's version of help for reference if needed
+// Evie's version of the HELP command for reference if needed
 //
 // exports.run = (client, message, args, level) => {
 //   // If no specific command is called, show all filtered commands.
@@ -42,14 +42,21 @@ a command, it is not shown to them. If a command name is given with the
 help command, its extended help is shown.
 */
 
+// ---------- TO DO: ----------
+// extend HELP command to take args and check if it is a category - then display help for the commands within that category 
+// expand embedded help message to include category of each command or change it to work more like FredBoat?
+// QA testing on current iteration
+// Rewrite to list all commands no matter access level and just include access levels in specific help command?
+
 exports.run = (client, message, args, level) => {
+  //require Discord library
+  const Discord = require("discord.js");
   // If no specific command is called, show all filtered commands.
   if (!args[0]) {
     // Filter all commands by which are available for the user's level, using the <Collection>.filter() method.
     const myCommands = message.guild ? client.commands.filter(cmd => client.levelCache[cmd.conf.permLevel] <= level) : client.commands.filter(cmd => client.levelCache[cmd.conf.permLevel] <= level &&  cmd.conf.guildOnly !== true);
     // get command names from myCommands object
     const commandNames = myCommands.keyArray();
-
     // create array for pushing commandsObject into
     var fieldsVar = [];
 
