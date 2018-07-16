@@ -1,9 +1,9 @@
 /*
-* Searches for a random catgirl image and posts it to the channel where the command was sent.
+* Searches for a random catboy image and posts it to the channel where the command was sent.
 */
 
 exports.run = async (client, message, args, level) => {
-    const msg = await message.channel.send("Searching for a catgirl...");
+    const msg = await message.channel.send("Searching for a catboy...");
     // search for a catgirl image
     // edit message with image link for 
     msg.edit({embed: {
@@ -45,8 +45,8 @@ exports.conf = {
 };
 
 exports.help = {
-    name: "catgirl",
+    name: "catboy",
     category: "Miscellaneous",
     description: "- UNDER CONSTRUCTION - ",
-    usage: "catgirl"
+    usage: "catboy"
 };
