@@ -11,7 +11,7 @@ exports.run = async (client, message, args, level) => {
     const privateSettingsObject = client.config.privateSettings;
     if(!args[0]) {
         // if no arguments after command - DM user with instructions
-        await msgAuthor.send(`Hi there! I'm here to help you get verified on the Dissentient [DIS] Discord server!\n\nPlease follow the directions outlined in this document to verify on the Discord server: `);
+        message.chanel.send(`Hi there! I'm here to help you get verified on the Dissentient [DIS] Discord server!\nPlease follow the directions outlined in this document to verify on the Discord server: `);
         client.logger.log(`Sent user ${msgAuthor.username} a DM about verification.`);
     } else {
         // if argument exists:
@@ -101,13 +101,13 @@ exports.run = async (client, message, args, level) => {
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: ["gwv"],
+    aliases: ["disv"],
     permLevel: "User"
 };
 
 exports.help = {
-    name: "gwverify",
+    name: "disverify",
     category: "Guild Wars 2",
-    description: "Verification through GW2 API.\n Checks for both world and guild.",
-    usage: "gwverify"
+    description: "Verification for DIS discord through GW2 API.\n Checks for both world and guild.",
+    usage: "disverify"
 };
