@@ -1,6 +1,6 @@
 /*
-* the PUGify comamnd gives all users who don't have 
-* any role the PUG role. Fall back for if the welcome message doesn't work.
+* the modUser comamnd allows moderators to add or remove roles and
+* kick or ban users from the discord server.
 */
 
 exports.run = async (client, message, args, level) => {
