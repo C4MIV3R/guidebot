@@ -16,6 +16,6 @@ exports.conf = {
 exports.help = {
     name: "charrcar",
     category: "Miscellaneous",
-    description: "Prints out a charr car.",
+    description: " - UNDER CONSTRUCTION - ",
     usage: "charrcar"
 };

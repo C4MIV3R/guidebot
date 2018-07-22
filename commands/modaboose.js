@@ -3,7 +3,7 @@
 */
 
 exports.run = async (client, message, args, level) => {
-    const msg = message.channel.send(`Mod Abooose!`);
+    await message.channel.send(`Mod Abooose!`);
 }
 
 exports.conf = {
