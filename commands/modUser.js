@@ -20,15 +20,21 @@ exports.run = async (client, message, args, level) => {
     }
 
     if(args[1] === 'remove') {
+        // remove role from user
         member.removeRole(roleId).then(() => client.logger.log(`removing ${member.nickname}'s role ${args[2]}`)).catch(console.error);
+        message.channel.send(`Removed ${roleId.name} from user: ${member.nickname}.`);
     } else if(args[1] === 'add') {
+        // add role to user
         member.addRole(roleId).then(() => client.logger.log(`Adding role ${args[2]} to ${member.nickname}`)).catch(console.error);
+        message.channel.send(`Added ${roleId.name} to user: ${member.nickname}.`);
     } else if(args[1] === 'kick') {
         // kick member from discord server
         member.kick(`${args[2]}`).then(() => client.logger.log(`Kicking ${member.nickname}; reason: ${args[2]}`)).catch(console.error);
+        message.channel.send(`Kicked user: ${member.nickname}.`);
     } else if(args[1] === 'ban') {
         // ban member from discord server
         member.ban(banObject).then(() => client.logger.log(`Banning ${member.nickname} for ${args[2]} days`)).catch(console.error);
+        message.channel.send(`Banned user: ${member.nickname}.`);
     }
 }
 

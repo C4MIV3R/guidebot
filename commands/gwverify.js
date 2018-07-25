@@ -10,7 +10,7 @@ exports.run = async (client, message, args, level) => {
     // setting privateSetting variable up
     const privateSettingsObject = client.config.privateSettings;
     // setting apiKeyLength for sanitization checks
-    const apiKeyLength = privateSettingsObject.gw2VerifyApiKeyLength;
+    // const apiKeyLength = privateSettingsObject.gw2VerifyApiKeyLength;
     if(!args[0]) {
         // if no arguments after command - respond to user in channel with instructions
         message.channel.send(`Hi there! I'm here to help you get verified on the ${message.guild.name} server!\nPlease follow the directions outlined in this document to verify on the Discord server: https://docs.google.com/document/d/1uzYWUq3cQh0S1HuvxKItdfbQNHDPzAR5CLjJ-nJ2AHM/edit?usp=sharing`);
@@ -50,37 +50,39 @@ exports.run = async (client, message, args, level) => {
                     });
 
                 // a string of the account's name
-                // var accountName = apiResponse.name;
+                var accountName = apiResponse.name;
                 // an array of the guilds the account is a member of
                 var apiGuildsArray = apiResponse.guilds; 
                 // an integer of the worldId the account is a member of
-                var apiGwServer = apiResponse.world;                
-                // check to see if guild with ID set in config.privatesettings.discordServerId is up and available
-                if(client.guilds.get(privateSettingsObject.discordServerId).available) {
+                var apiGwServer = apiResponse.world;
+                // check to see if guild where message was sent is up and available && GW2 api has returned a non-null response
+                if(message.guild.available && apiResponse) {
                     client.logger.log('Server available. Continuing.');
+                    // set nickname as their previous nickname + GW2 accountName
+                    message.member.setNickname(message.member.nickname + ` (${accountName})`);
                     // check that the account's worldId matches the worldId in config.privatesettings.gw2VerifyServerId
                     if(apiGwServer === privateSettingsObject.gw2VerifyServerId) {
-                        // find guild by config.privateSettings.discordServerId -> find role within said guild with name equal to config.privatesettings.mainRoleName
-                        var basicRole = client.guilds.get(privateSettingsObject.discordServerId).roles.find("name", privateSettingsObject.basicRoleName);
-                        // find guild by config.privateSettings.discordServerId -> find user within guild with id equal to msgAuthor.id -> add basicRole
-                        client.guilds.get(privateSettingsObject.discordServerId).members.get(msgAuthor.id).addRole(basicRole);
+                        // get guild ID -> find role within said guild with name equal to config.privatesettings.basicRoleName
+                        var basicRole = message.guild.roles.find("name", privateSettingsObject.basicRoleName);
+                        // get guild ID -> find user within guild with id equal to msgAuthor.id -> add basicRole
+                        message.guild.members.get(msgAuthor.id).addRole(basicRole);
                         // send confirm to user
-                        message.channel.send('Server membership confirmed.\nYou have been successfully verified.\nEditing permissions.\n\nIf for some reason, you do not receive the TC WvW role, contact Kamm in DIS discord.');
-                        client.logger.log(`User ${msgAuthor.username} - Server verification successful. Granting TC WvW role to user.`);
+                        message.channel.send(`Server membership confirmed.\nYou have been successfully verified.\nEditing permissions.\n\nIf for some reason, you do not receive the ${privateSettingsObject.basicRoleName} role, contact Kamm in DIS discord.`);
+                        client.logger.log(`User: ${msgAuthor.username}, Discord ID: ${msgAuthor.id}, GW2 Account: ${accountName} - Server verification successful. Granting ${privateSettingsObject.basicRoleName} role to user.`);
                     } else {
                         // user is NOT on our server - do not verify for basicRole
                         message.channel.send('Server membership verification failed.\nIf you believe this was an error, please try again.\n\nIf the error persists, contact Kamm in DIS discord.');
-                        client.logger.log(`User ${msgAuthor.username} - Server verification failed.`);
+                        client.logger.log(`User: ${msgAuthor.username}, Discord ID: ${msgAuthor.id}, GW2 Account: ${accountName} - Server verification failed.`);
                     }
-                    for(var i=0; i < apiGuildsArray.length ; i++) {
+                    for(var i=0; i < apiGuildsArray.length; i++) {
                         if(apiGuildsArray[i] === privateSettingsObject.gw2VerifyGuildId) {
-                            // find guild by config.privateSettings.discordServerId -> find role within said guild with name equal to config.privatesettings.mainRoleName
-                            var mainRole = client.guilds.get(privateSettingsObject.discordServerId).roles.find("name", privateSettingsObject.mainRoleName);
-                            // find guild by config.privateSettings.discordServerId -> find user within guild with id equal to msgAuthor.id -> add mainRole
-                            client.guilds.get(privateSettingsObject.discordServerId).members.get(msgAuthor.id).addRole(mainRole);
+                            // get guild ID -> find role within said guild with name equal to config.privatesettings.memberRoleName
+                            var memberRole = message.guild.roles.find("name", privateSettingsObject.memberRoleName);
+                            // get guild ID -> find user within guild with id equal to msgAuthor.id -> add memberRole
+                            message.guild.members.get(msgAuthor.id).addRole(memberRole);
                             // send confirm to user
-                            message.channel.send('Dissentient membership confirmed.\nYou have been successfully verified.\nEditing permissions.\n\nIf for some reason, you do not receive the DIS role, contact Kamm in DIS discord.');
-                            client.logger.log(`User ${msgAuthor.username} - Verification successful. Granting DIS role to user.`);
+                            message.channel.send(`Dissentient membership confirmed.\nYou have been successfully verified.\nEditing permissions.\n\nIf for some reason, you do not receive the ${privateSettingsObject.memberRoleName} role, contact Kamm in DIS discord.`);
+                            client.logger.log(`User: ${msgAuthor.username}, Discord ID: ${msgAuthor.id}, GW2 Account: ${accountName} - Verification successful. Granting ${privateSettingsObject.memberRoleName} role to user.`);
                             // exit loop
                             return;
                         } else {
@@ -91,9 +93,9 @@ exports.run = async (client, message, args, level) => {
                     // message.channel.send('Dissentient membership verification failed.\nIf you believe this was an error, please try again.\n\nIf the error persists, contact Kamm in DIS discord.');
                     client.logger.log(`User ${msgAuthor.username} - guild verification failed.`);
                 } else {
-                    message.channel.send('Discord server is currently down. Cannot apply changes. Exiting process.');
-                    client.logger.log(`Discord server is currently down. Exiting process.`);
-                    return;
+                    message.delete();
+                    message.channel.send('GW2 API did not respond. Please try again later.');
+                    client.logger.log(`User ${msgAuthor.username} - GW2 api responded null.`);
                 }
             } else {
                 message.delete();
@@ -118,6 +120,6 @@ exports.conf = {
 exports.help = {
     name: "gwverify",
     category: "Guild Wars 2",
-    description: "Verification for DIS discord through GW2 API.\n Checks for both world and guild.",
-    usage: "gwverify"
+    description: "Verification for DIS discord through GW2 API.\nChecks for both world and guild.",
+    usage: "gwverify [APIKey]"
 };

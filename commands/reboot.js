@@ -1,3 +1,6 @@
+// I don't think this will work in it's current form;
+// probably need to refactor this to work with Forever
+
 exports.run = async (client, message, args, level) => {// eslint-disable-line no-unused-vars
   await message.reply("Bot is shutting down.");
   client.commands.forEach( async cmd => {
