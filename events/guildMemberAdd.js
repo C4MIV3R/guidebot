@@ -3,11 +3,10 @@
 module.exports = (client, member) => {
   // Load the guild's settings
   const settings = client.getGuildSettings(member.guild);
-  const privateSettings = client.config.privateSettings;
-  
-  // this returns that it cannot read property roles of undefined? client.guild is undefined
-  const roleId = client.guild.roles.find("name", privateSettings.basicRoleName);
-  member.addRole(roleId, 'Joined server').catch(error);
+  // const privateSettings = client.config.privateSettings;
+  // 
+  // const roleId = client.guild.roles.find("name", privateSettings.basicRoleName);
+  // member.addRole(roleId, 'Joined server').catch(error);
  
   // If welcome is off, don't proceed (don't welcome the user)
   if (settings.welcomeEnabled !== "true") return;

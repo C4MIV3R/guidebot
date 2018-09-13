@@ -14,7 +14,7 @@ exports.run = async (client, message, args, level) => {
     } else if(args[1] === 'ban') {
         var banObject = { days: args[2], reason: args[3] };
     } else {
-        message.channel.send('Unknown action. (argument 2)');
+        message.channel.send(`Unknown action. ${args[2]}`);
         client.logger.log(`Unknown action ${args[2]}`);
         return;
     }
