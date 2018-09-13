@@ -60,7 +60,7 @@ exports.run = async (client, message, args, level) => {
                 var apiGwServer = apiResponse.world;
                 // check to see if guild where message was sent is up and available && GW2 api has returned a non-null response
                 if(message.guild.available && apiResponse) {
-                    client.logger.log('Server available. Continuing.');
+                    client.logger.log('Bot server available. Continuing.');
                     client.logger.log(message.member.displayName);
                     // set nickname as their previous nickname + GW2 accountName
                     var memberNewDisplayName = message.member.displayName + ` (${accountName})`;

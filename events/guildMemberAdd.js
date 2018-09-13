@@ -4,7 +4,8 @@ module.exports = (client, member) => {
   // Load the guild's settings
   const settings = client.getGuildSettings(member.guild);
   const privateSettings = client.config.privateSettings;
-  // No matter what - assign user privateSettings.basicRoleName
+  
+  // this returns that it cannot read property roles of undefined? client.guild is undefined
   const roleId = client.guild.roles.find("name", privateSettings.basicRoleName);
   member.addRole(roleId, 'Joined server').catch(error);
  
